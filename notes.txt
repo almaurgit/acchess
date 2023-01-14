@@ -19,4 +19,13 @@ Classe Echiquier
         occupied BOOLEAN
         occupiedBy PIECE || NULL
 
-    
+Idees :
+    Temps personnalisable par joueur
+    Jouer qu'avec un delai par coup
+    Creer des pieces avec leurs regles
+    Creer la regle de fin
+    Faire un shogi
+    Faire un yanif
+    Echiquier infini horizontalement
+    Chat
+    Parties a l aveugle

@@ -1,4 +1,4 @@
-import {Piece} from "./Piece.mjs"
+import {Piece} from "./pieces/Piece.mjs"
 import { pion, rook, knight, bishop, queen, king, white, black }  from "./const.js"
 import { validCoordinate } from "./functions.js"
 
@@ -92,9 +92,16 @@ export class Chessboard {
         })
      }
 
-     square(coordinate) {
+     getSquare(coordinate) {
         const {row, col} = this.parseSquareToBoard(coordinate)
         return this.chessboard[row][col]
      }
+
+     setSquare(coordinate, piece) {
+        const {row, col} = this.parseSquareToBoard(coordinate)
+        this.chessboard[row][col] = piece 
+     }
+
+
 
 }

@@ -8,3 +8,7 @@ export function validCoordinate(coordinate) {
     }
     return true
 }
+
+export function validColor(color) {
+    return color === "white" || color === "black"
+}
