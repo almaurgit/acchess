@@ -6,9 +6,20 @@ export function validCoordinate(coordinate) {
     if (!squareRegex.test(coordinate)) {
         throw new Error("The square is not in a good format (example : g2)")
     }
+    
     return true
 }
 
 export function validColor(color) {
     return color === "white" || color === "black"
+}
+
+export function filterChessboard(chessboard, cb) {
+    let filtered = []
+    chessboard.forEach(row => {
+        for (let square of row) {
+            if (cb(square) === true) filtered.push(square)
+        }
+    })
+    return filtered
 }
