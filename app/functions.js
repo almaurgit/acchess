@@ -23,3 +23,11 @@ export function filterChessboard(chessboard, cb) {
     })
     return filtered
 }
+
+export function forEachChessboard(chessboard, cb) {
+    chessboard.forEach(row => {
+        for (let square of row) {
+            cb(square)
+        }
+    })
+}

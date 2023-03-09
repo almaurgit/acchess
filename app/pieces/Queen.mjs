@@ -1,17 +1,23 @@
 import { Piece } from "./Piece.mjs"
+import { Rook } from "./Rook.mjs"
+import { Bishop } from "./Bishop.mjs"
+import { accessibleSquaresDiagonal, accessibleSquaresLine } from "./piecesRules.mjs"
+
 
 export class Queen extends Piece {
 
     symbol = "Q"
+    value = 10
     constructor(game, position, color) {
         super(game, position, color)
     }
 
-    canMove(position) {
-        return true
+    canAccess(endRow, endCol, capture) {
+        return false
+        // return Rook.canAccess.bind(this) && Bishop.canAccess.bind(this)
     }
 
-    canCapture(position) {
-        return true
+    accessibleSquares() {
+        return accessibleSquaresLine.bind(this).concat(accessibleSquaresDiagonal.bind(this))
     }
 }

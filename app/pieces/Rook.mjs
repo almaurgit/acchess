@@ -1,56 +1,48 @@
 import { Piece } from "./Piece.mjs"
+import { accessibleSquaresLine } from "./piecesRules.mjs"
 
 export class Rook extends Piece {
 
     symbol = "R"
+    value = 5
     constructor(game, position, color) {
         super(game, position, color)
     }
 
-    canMove(position) {
-        const {row: endRow, col: endCol} = this.game.parseSquareToBoard(position)
-        const {row, col} = this.game.parseSquareToBoard(this.position)
-        if (position === this.position) return false // we don't want to allow to make a move to the same square
+    canAccess(endRow, endCol) {
+        if (endRow === this.row && endCol === this.col) return false // we don't want to allow to make a move to the same square
 
         // specific rules for the rook (move verticaly and horizontally)
-        if (endRow !== row && endCol !== col) return false
-        if (endRow === row) {
-            if (col > endCol) {
-                for (let i = col - 1; i > endCol; i--) {
-                    if (!(this.game.chessboard[row][i] === "null")) return false
+        if (endRow !== this.row && endCol !== this.col) return false
+        if (endRow === this.row) {
+            if (this.col > endCol) {
+                for (let i = this.col - 1; i > endCol + 1; i--) {
+                    if (!(this.game.chessboard[this.row][i] === "null")) return false
                 }
             }
             else {
-                for (let i = col + 1; i < endCol; i++) {
-                    if (!(this.game.chessboard[row][i] === "null")) return false
+                for (let i = this.col + 1; i < endCol - 1; i++) {
+                    if (!(this.game.chessboard[this.row][i] === "null")) return false
                 }
             }
         }
         else {
-            if (row > endRow) {
-                for (let i = row - 1; i > endRow; i--) {
-                    if (!(this.game.chessboard[i][col] === "null")) return false
+            if (this.row > endRow) {
+                for (let i = this.row - 1; i > endRow + 1; i--) {
+                    if (!(this.game.chessboard[i][this.col] === "null")) return false
                 }
             }
             else {
-                for (let i = row + 1; i < endRow; i++) {
-                    if (!(this.game.chessboard[i][col] === "null")) return false
+                for (let i = this.row + 1; i < endRow - 1; i++) {
+                    if (!(this.game.chessboard[i][this.col] === "null")) return false
                 }
             }
         }
         return true
     }
 
-    canCapture(position) {
-        if (!this.canMove(position))
-            return false
-        const {row, col} = this.game.parseSquareToBoard(position)
-        if (!this.game.chessboard[row][col] || this.game.chessboard[row][col].color === this.color)
-            return false
-        // add verif if this is the king
-        return true 
+    accessibleSquares() { 
+        return accessibleSquaresLine.bind(this)
     }
-
-    // makeMove
-    // makeCapture
 }
+

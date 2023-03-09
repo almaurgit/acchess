@@ -12,21 +12,30 @@ export class Game {
     constructor (
         dimensions = 8,
         numberOfMoves = 0,
-        piecesOnBoard = null
+        piecesOnBoard = null,
+        timer = [0.0, 0.0],
+        colorToMove = "white"
     ) {
-        this.dimensions = dimensions
-        if (this.dimensions >= 16 || this.dimensions < 8)
+
+        if (dimensions >= 16 || dimensions < 5)
         {
             throw new Error("Wrong dimensions")
         }
+
+        this.dimensions = dimensions
         this.numberOfMoves = numberOfMoves
         this.capturedPieces = []
         this.pgn = ""
+        this.colorToMove = colorToMove
+        this.nextColor = {
+            "white": "black",
+            "black": "white"
+        }
         this.chessboard = new Array(this.dimensions).fill(null).map(() => new Array(this.dimensions).fill(null))
-        
+
         this.timer = {
-            "white": 0.0,
-            "black": 0.0
+            "white": timer[0],
+            "black": timer[1]
         }
         this.hasStarted = false
         this.playing = false
@@ -89,6 +98,7 @@ export class Game {
     }
     
     validCoordinate(coordinate) {
+        console.log(coordinate)
         if (typeof coordinate !== 'string') {
             throw new Error("The square is not in string format")
         }
@@ -109,6 +119,7 @@ export class Game {
             return {row, col}
         }
      }
+
 
      printBoard() {
         this.chessboard.map(row => {
@@ -152,54 +163,56 @@ export class Game {
         if (!move.includes("x") && !move.includes("=")) { // Not a capture nor a promotion
             //Pawn move
             if (move.length === 2 && this.validCoordinate(move)) {
-                for (let row of this.chessboard) {
-                    for (let piece of row) {
-                        if (piece instanceof Pawn && piece.canMove(move)) {
-                            return {piece, square: move, capture: false}
-                        }
+                for (let piece of filterChessboard(this.chessboard, piece => piece?.color === this.colorToMove)) {
+                    // console.log(piece && piece.position, piece instanceof Pawn, piece?.canMove(move))
+                    if (piece instanceof Pawn && piece.canMove(move)) {
+                        console.log(5)
+                        return {piece, square: move, capture: false}
                     }
                 }
             }
+            console.log("parsemove piece")
 
             //Piece move
             if (move.length >= 3 && move.length <= 5) {
-                const pieceString = move.slice(0, -2)
+                        console.log(8)
+                        const pieceString = move.slice(0, -2)
                 const squareToMove = move.slice(-2)
 
                 if (!this.validCoordinate(squareToMove)) throw new Error("Wrong coordinates to move to")
 
-                const pieceToMove = this.identifyPiece(pieceString, squareToMove)
+                const pieceToMove = this.identifyPiece(pieceString, squareToMove, false)
                 if (!pieceToMove) throw new Error("Error in the move (wrong syntax, or amiguity)")
 
                 return {piece: pieceToMove, square: squareToMove, capture: false}
             }
         }
         else if (move.includes("x")) { // A capture
+            console.log("capture")
             const [pieceString, squareToMove, ...rest] = move.split("x")
-            if (rest) throw new Error("Move error : one capture allowed")
+            console.log(pieceString, squareToMove, rest)
+            if (rest[0]) throw new Error("Move error : one capture allowed")
 
-            if (pieceString.length === 1 && this.colLetters.includes(pieceString) && this.validCoordinate(squareToMove)) { // pawn
-                for (let row of this.chessboard) {
-                    for (let piece of row) {
-                        if (piece instanceof Pawn && piece.canCapture(squareToMove)) {
-                            return {piece, square: squareToMove, capture: true}
-                        }
+            //pawn
+            if (pieceString.length === 1 && this.colLetters.includes(pieceString) && this.validCoordinate(squareToMove)) { 
+                for (let piece of filterChessboard(this.chessboard, piece => piece?.color === this.colorToMove)) {
+                    if (piece instanceof Pawn && piece.canCapture(squareToMove)) {
+                        return {piece, square: squareToMove, capture: true}
                     }
                 }
             }
 
-            const pieceToMove = this.identifyPiece(pieceString)
+            //piece
+            const pieceToMove = this.identifyPiece(pieceString, squareToMove, true)
             if (!pieceToMove) throw new Error("Error in the move (wrong syntax, or amiguity")
 
             return {piece: pieceToMove, square: squareToMove, capture: true}
-
-
         }
-        else return null
+        return {piece: null, square: null, capture: null}
     }
-    
 
-    identifyPiece(pieceString, squareToMove) {
+    identifyPiece(pieceString, squareToMove, capture) {
+            console.log("identifyPiece")
         const pieceSymbol = pieceString[0]
         const pieceDisambiguation = pieceString.slice(1)
         console.log(pieceSymbol + "--" + pieceDisambiguation + "--" + squareToMove)
@@ -210,23 +223,40 @@ export class Game {
         else if (pieceDisambiguation >= 1 && !this.validCoordinate(pieceDisambiguation)) {
             throw new Error("Amibiguity not handled", pieceDisambiguation, pieceString, squareToMove)
         }
+        console.log("beforePieceSymboles")
         if (this.pieceSymbols.includes(pieceSymbol)) {
             const involvedPieces = filterChessboard(this.chessboard, (piece => {
-                return piece instanceof Piece && piece.symbol === pieceSymbol && piece.position.includes(pieceDisambiguation)
+                return piece instanceof Piece && piece.symbol === pieceSymbol && this.colorToMove === piece.color && piece.position.includes(pieceDisambiguation)
             }))
+            console.log("here involved", involvedPieces.length)
             let numberOfPiecesThatCanMakeThatMove = 0
             let pieceToMove = null
             for (let piece of involvedPieces) {
-                if (piece.canMove(squareToMove)) {
+                if (capture ? piece.canCapture(squareToMove) : piece.canMove(squareToMove)) {
                     numberOfPiecesThatCanMakeThatMove++
                     pieceToMove = piece
                 }
             }
             if (numberOfPiecesThatCanMakeThatMove > 1) throw new Error("Ambiguity regarding the piece to move")
-            console.log("piece to move :", pieceToMove)
+            console.log("piece to move :", pieceToMove?.symbol + pieceToMove?.position)
             return pieceToMove
         }
         return null
+    }
+
+    playMove(move, color, toParse) {
+        this.launchTimer(color)
+        let { piece, square, capture } = this.parseMove(move)
+        // console.log(piece, square, capture)
+        if (capture)
+            piece.makeCapture(square)
+        else
+            piece.makeMove(square)
+
+    }
+
+    launchTimer() {
+
     }
 
 
