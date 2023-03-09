@@ -212,3 +212,73 @@ export function accessibleSquaresDiagonal() {
     }
     return squares
 }
+
+export function canAccessLine(endRow, endCol) {
+    if (endRow === this.row && endCol === this.col) return false // we don't want to allow to make a move to the same square
+
+    // specific rules for the rook (move verticaly and horizontally)
+    if (endRow !== this.row && endCol !== this.col) return false
+    if (endRow === this.row) {
+        if (this.col > endCol) {
+            for (let i = this.col - 1; i > endCol; i--) {
+                if (this.game.chessboard[this.row][i] !== null) return false
+            }
+        }
+        else {
+            for (let i = this.col + 1; i < endCol; i++) {
+                if (this.game.chessboard[this.row][i] !== null) return false
+            }
+        }
+    }
+    else {
+        if (this.row > endRow) {
+            for (let i = this.row - 1; i > endRow; i--) {
+                if (this.game.chessboard[i][this.col] !== null) return false
+            }
+        }
+        else {
+            for (let i = this.row + 1; i < endRow; i++) {
+                if (this.game.chessboard[i][this.col] !== null) return false
+            }
+        }
+    }
+    return true
+}
+
+export function canAccessDiagonal(endRow, endCol, capture) {
+    console.log("diagonal access", this.col, this.row)
+    if (this.row === endRow && this.col === endCol) return false
+    if (Math.abs(endRow - this.row) !== Math.abs(endCol - this.col)) 
+        return false
+    else {
+        let minCol = Math.min(endCol, this.col)
+        let minRow = Math.min(endRow, this.row)
+        let maxCol = Math.max(endCol, this.col)
+        let maxRow = Math.max(endRow, this.row)
+        if ((minCol === this.col && minRow === this.row) || (maxCol === this.col && maxRow === this.row)) {
+            let col = minCol + 1
+            let row = minRow + 1
+            while (col < maxCol && row < maxRow) {
+                console.log("====== ENDCOL > THIS.COL =======", this.row, row, endRow, "=====", this.col, col, endCol)
+                if (this.game.chessboard[row][col] !== null) return false
+                row++
+                col++
+            }
+        }
+        else {
+            let col = maxCol - 1
+            let row = minRow + 1
+            while (col > minCol && row < maxRow) {
+                console.log("======ENDCOL < THIS.COL ======= ", this.row, row, endRow, "=====", this.col, col, endCol)
+                    if (this.game.chessboard[row][col] !== null) {
+                    console.log("======ENDCOL < THIS.COL ======= FALSE", this.row, row, endRow, "=====", this.col, col, endCol)
+                    console.log(this.game.chessboard[row][col].position)
+                    return false
+                }
+                row++
+                col--
+            }
+        }
+    }
+    return true
+}

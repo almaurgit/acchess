@@ -56,7 +56,6 @@ export class Pawn extends Piece {
     }
 
     #enPassant(row, col, color) {
-        const pawnToCapture = this.game.chessboard[row + 1][col]
         if (color === "white") {
             const pawnToCapture = this.game.chessboard[row + 1][col]
             if (pawnToCapture instanceof Pawn

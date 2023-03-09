@@ -5,7 +5,7 @@ import { Bishop } from "./pieces/Bishop.mjs"
 import { Queen } from "./pieces/Queen.mjs"
 import { King } from "./pieces/King.mjs"
 import { Pawn } from "./pieces/Pawn.mjs"
-import { filterChessboard } from "./functions.js"
+import { filterChessboard, findChessboard } from "./functions.js"
 
 export class Game {
 
@@ -171,10 +171,16 @@ export class Game {
                     }
                 }
             }
-            console.log("parsemove piece")
-
+            else if (move === "O-O" || move === "O-O-O") { //castling
+                let king = findChessboard(this.chessboard, piece => piece instanceof King && piece?.color === this.colorToMove)
+                let square = this.colLetters[move === "O-O" ? king.col + 2 : king.col - 2] + this.rowNumbers[this.dimensions - 1 - king.row]
+                let castle = move === "O-O" ? "short" : "long"
+                if (king.canMove(square))
+                    return {piece: king, square, capture: false, castle}
+                else throw new Error("Impossible to castle, sorry about that")
+            }
             //Piece move
-            if (move.length >= 3 && move.length <= 5) {
+            else if (move.length >= 3 && move.length <= 5) {
                         console.log(8)
                         const pieceString = move.slice(0, -2)
                 const squareToMove = move.slice(-2)
@@ -186,6 +192,7 @@ export class Game {
 
                 return {piece: pieceToMove, square: squareToMove, capture: false}
             }
+            
         }
         else if (move.includes("x")) { // A capture
             console.log("capture")
@@ -246,12 +253,8 @@ export class Game {
 
     playMove(move, color, toParse) {
         this.launchTimer(color)
-        let { piece, square, capture } = this.parseMove(move)
-        // console.log(piece, square, capture)
-        if (capture)
-            piece.makeCapture(square)
-        else
-            piece.makeMove(square)
+        let { piece, square, capture, castle } = this.parseMove(move)
+        piece.makeMove(square, capture, castle)
 
     }
 

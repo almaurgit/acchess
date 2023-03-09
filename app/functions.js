@@ -31,3 +31,11 @@ export function forEachChessboard(chessboard, cb) {
         }
     })
 }
+
+export function findChessboard(chessboard, cb) {
+    for (let row of chessboard) {
+        for (let piece of row) {
+            if (cb(piece) === true) return piece
+        }
+    }
+}

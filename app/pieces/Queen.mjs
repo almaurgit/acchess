@@ -1,7 +1,7 @@
 import { Piece } from "./Piece.mjs"
 import { Rook } from "./Rook.mjs"
 import { Bishop } from "./Bishop.mjs"
-import { accessibleSquaresDiagonal, accessibleSquaresLine } from "./piecesRules.mjs"
+import { accessibleSquaresDiagonal, accessibleSquaresLine, canAccessLine, canAccessDiagonal } from "./piecesRules.mjs"
 
 
 export class Queen extends Piece {
@@ -12,9 +12,8 @@ export class Queen extends Piece {
         super(game, position, color)
     }
 
-    canAccess(endRow, endCol, capture) {
-        return false
-        // return Rook.canAccess.bind(this) && Bishop.canAccess.bind(this)
+    canAccess (endRow, endCol) {
+        return canAccessLine.bind(this)(endRow, endCol) || canAccessDiagonal.bind(this)(endRow, endCol)
     }
 
     accessibleSquares() {
