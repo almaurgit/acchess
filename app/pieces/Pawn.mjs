@@ -29,6 +29,7 @@ export class Pawn extends Piece {
                 if (this.moves.length === 0 && endRow === this.row + 2 && this.game.chessboard[this.row + 1][this.col] === null) { //1st move
                     this.enPassant = true
                     this.enPassantMove = this.game.numberOfMoves
+                    console.log("very much here")
                     return true
                 } 
             }
@@ -38,26 +39,31 @@ export class Pawn extends Piece {
             if (this.color === "white") {
                 if ((this.col === endCol + 1 || this.col === endCol - 1) 
                 && this.row - 1 === endRow 
-                && this.game.chessboard[endRow][endCol].color === "black")
+                && this.game.chessboard[endRow][endCol]?.color === "black")
                     return true
-                else if (this.#enPassant(endRow, endCol, "white"))
+                else if (this.#enPassant(endRow, endCol, "white")) {
+                    console.log("canaCCESSSSSSSSS true", endRow, endCol, capture, this.position)
+
                     return true
+                }
             }
             else if (this.color === "black") {
                 if ((this.col === endCol + 1 || this.col === endCol - 1) 
                 && this.row + 1 === endRow 
-                && this.game.chessboard[endRow][endCol].color === "white")
+                && this.game.chessboard[endRow][endCol]?.color === "white")
                     return true
                 else if (this.#enPassant(endRow, endCol, "black"))
                     return true
             }
         }
+
         return false
     }
 
     #enPassant(row, col, color) {
         if (color === "white") {
             const pawnToCapture = this.game.chessboard[row + 1][col]
+            // console.log("PAWN TO CAPTURE", this.position, this.color, pawnToCapture.position, pawnToCapture.enPassant)
             if (pawnToCapture instanceof Pawn
                 && pawnToCapture.enPassant === true 
                 && this.game.numberOfMoves === pawnToCapture.enPassantMove + 1) {

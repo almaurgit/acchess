@@ -27,6 +27,9 @@ export class Game {
         this.capturedPieces = []
         this.pgn = ""
         this.colorToMove = colorToMove
+        this.lastCapture = null
+        this.lastPawnMove = null
+        this.numberOfEachPositions = {}
         this.nextColor = {
             "white": "black",
             "black": "white"
@@ -37,9 +40,12 @@ export class Game {
             "white": timer[0],
             "black": timer[1]
         }
+
+
         this.hasStarted = false
         this.playing = false
         this.over = false
+        this.result = {}
 
         this.pieceSymbols = ["R", "N", "B", "Q", "K"]
         this.colLetters = new Array(dimensions).fill(null).map((_, i) => String.fromCharCode("a".charCodeAt() + i))
@@ -160,14 +166,38 @@ export class Game {
             throw new Error("The move isn't valid (not a string)")
         if (move.length < 2) throw new Error("Move invalid (not enough characters")
 
-        if (!move.includes("x") && !move.includes("=")) { // Not a capture nor a promotion
+        if (move.endsWith("?!") || move.endsWith("??") || move.endsWith("!!"))
+            move = move.slice(0, -2)
+        if (move.endsWith("+") || move.endsWith("#") || move.endsWith("?") || move.endsWith("!"))
+            move = move.slice(0, -1)
+
+        let promotion = null
+        if (move.includes("=")) {
+            let [moveCopy, promotionCopy, ...rest] = move.split("=")
+            if (rest[0]) throw new Error("One '=' allowed in the move if it is a promotion")
+            move = moveCopy
+            promotion = promotionCopy
+            if (!['Q', 'R', 'B', 'N'].includes(promotion)) throw new Error("Wrong promotion : only Q, B, R, or N")
+
+        }
+
+        if (!move.includes("x")) { // Not a capture
             //Pawn move
             if (move.length === 2 && this.validCoordinate(move)) {
                 for (let piece of filterChessboard(this.chessboard, piece => piece?.color === this.colorToMove)) {
                     // console.log(piece && piece.position, piece instanceof Pawn, piece?.canMove(move))
                     if (piece instanceof Pawn && piece.canMove(move)) {
-                        console.log(5)
-                        return {piece, square: move, capture: false}
+                        let promotionPiece = null
+                        if (promotion) {
+                            if (!(piece.color === "white" && piece.row === 1) && !(piece.color === "black" && piece.row === this.dimensions - 2))
+                                throw new Error("You cannot promote !")
+                            else
+                                promotionPiece = this.createPromotionPiece(promotion, move)
+
+                        }
+                        else if ((piece.color === "white" && piece.row === 1) || (piece.color === "black" && piece.row === this.dimensions - 2))
+                            throw new Error("You NEED to promote !")
+                        return {piece, square: move, capture: false, option: {promotion, promotionPiece}}
                     }
                 }
             }
@@ -176,7 +206,7 @@ export class Game {
                 let square = this.colLetters[move === "O-O" ? king.col + 2 : king.col - 2] + this.rowNumbers[this.dimensions - 1 - king.row]
                 let castle = move === "O-O" ? "short" : "long"
                 if (king.canMove(square))
-                    return {piece: king, square, capture: false, castle}
+                    return {piece: king, square, capture: false, option: {castle}}
                 else throw new Error("Impossible to castle, sorry about that")
             }
             //Piece move
@@ -203,8 +233,18 @@ export class Game {
             //pawn
             if (pieceString.length === 1 && this.colLetters.includes(pieceString) && this.validCoordinate(squareToMove)) { 
                 for (let piece of filterChessboard(this.chessboard, piece => piece?.color === this.colorToMove)) {
-                    if (piece instanceof Pawn && piece.canCapture(squareToMove)) {
-                        return {piece, square: squareToMove, capture: true}
+                    if (piece instanceof Pawn && piece.position[0] === pieceString && piece.canCapture(squareToMove)) {
+                        let promotionPiece = null
+                        if (promotion) {
+                            if (!(piece.color === "white" && piece.row === 1) && !(piece.color === "black" && piece.row === this.dimensions - 2))
+                                throw new Error("You cannot promote ! " + piece.color + piece.row)
+                            else
+                                promotionPiece = this.createPromotionPiece(promotion, squareToMove)
+                        }
+                        else if ((piece.color === "white" && piece.row === 1) || (piece.color === "black" && piece.row === this.dimensions - 2))
+                            throw new Error("You NEED to promote !")
+
+                        return {piece, square: squareToMove, capture: true, option: {promotion, promotionPiece}}
                     }
                 }
             }
@@ -253,14 +293,70 @@ export class Game {
 
     playMove(move, color, toParse) {
         this.launchTimer(color)
-        let { piece, square, capture, castle } = this.parseMove(move)
-        piece.makeMove(square, capture, castle)
+        let { piece, square, capture, option } = this.parseMove(move)
+        piece.makeMove(square, capture, option)
+        // let pieceSelected = ,,,
+        // let squareSelected = ...
+        // let capture = false
+        // if (this.chessboard[squareSelected.row][squareSelected.col] instanceof Piece) capture = true
+        // if ((!capture && pieceSelected.canMove(squareSelected)) || (capture && pieceSelected.canMove(squareSelected))) pieceSelected.makeMove(squareSelected, capture, castle)
 
     }
+
+
 
     launchTimer() {
 
     }
 
+
+    createPromotionPiece(promotion, position) {
+        switch (promotion) {
+            case "Q": 
+                let queen = new Queen(this, position)
+                return queen
+                break;
+            case "R": 
+                let rook = new Rook(this, position)
+                return rook
+                break;
+            case "B": 
+                let bishop = new Bishop(this, position)
+                return bishop
+                break;
+            case "N": 
+                let knight = new Knight(this, position)
+                return knight
+                break;
+            default:
+                return null
+        }
+        return null
+    }
+
+    importPgn(pgn) {
+        pgn = pgn.trim().split(/\s+/)
+        console.log(pgn)
+        let movenumber = 0
+        for (let i = 0; i < pgn.length; i += 3) {
+            console.log("CURRENT MOOOOOOVE", pgn[i], pgn[i + 1], pgn[i + 2])
+            let tmp = this.#parseMoveNumber(pgn[i])
+            if (movenumber + 1!== tmp) throw new Error("Wrong move number at " + tmp)
+            movenumber = tmp
+            let { piece, square, capture, option } = this.parseMove(pgn[i + 1])
+            piece.makeMove(square, capture, option)
+            this.printBoard();
+            ({ piece, square, capture, option } = this.parseMove(pgn[i + 2]));
+            piece.makeMove(square, capture, option)
+            this.printBoard()
+        }
+    }
+
+    #parseMoveNumber(str) {
+        const fmt = /^\d+\./
+        if (!fmt.test(str))
+            throw new Error("invalid pgn format: " + str)
+        return parseInt(str)
+    }
 
 }

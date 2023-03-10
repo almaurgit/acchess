@@ -12,7 +12,7 @@ export class King extends Piece {
 
     canAccess(endRow, endCol) {
 
-        console.log("CANACCESS KIIING, row =", this.row, "->", endRow + ", col =", this.col, "->", endCol)
+        console.log("CANACCESS KIIING, row =", this.row, "->", endRow + ", col =", this.col, "->", endCol, this.color)
         if (Math.abs(endCol - this.col) <= 1 && Math.abs(endRow - this.row) <= 1
             && !this.#squareInCheck(endRow, endCol)) {
             return true
@@ -49,15 +49,36 @@ export class King extends Piece {
         console.log("SQUAREINCHEEECK", row, col)
         const piecesOnBoard = this.game.chessboard.flat().filter(piece => piece instanceof Piece)
         console.log(piecesOnBoard.map(piece => piece.position))
-        // for (let piece of piecesOnBoard) {
-        //     console.log(piece.position)
-        //     if (piece !== null && piece.color !== this.color
-        //         && piece.canAccess(row, col, true))
-        //         {
-        //             console.log("position de la piece coupable", piece.position)
-        //             return true
-        //     }
-        // }
+        for (let piece of piecesOnBoard) {
+            console.log(piece.position)
+            if (piece !== null && piece.color !== this.color
+                && piece.canAccess(row, col, true))
+                {
+                    console.log("position de la piece coupable", piece.symbol + piece.position)
+                    console.log(piece.symbol + piece.position, "puts", this.symbol + this.position, "in check")
+                    return true
+            }
+        }
         return false
+    }
+
+    isInCheck() {
+        let row = this.row
+        let col = this.col
+        console.log("ISINCHEECK", row, col)
+        const piecesOnBoard = this.game.chessboard.flat().filter(piece => piece instanceof Piece)
+        console.log(piecesOnBoard.map(piece => piece.position))
+        for (let piece of piecesOnBoard) {
+            console.log(piece.position)
+            if (piece !== null && piece.color !== this.color && piece.symbol !== 'K'
+                && piece.canAccess(row, col, true))
+                {
+                    console.log("position de la piece coupable", piece.symbol + piece.position)
+                    console.log(piece.symbol + piece.position, "puts", this.symbol + this.position, "in check")
+                    return true
+            }
+        }
+        return false
+        // return this.#squareInCheck(this.row, this.col)
     }
 }
