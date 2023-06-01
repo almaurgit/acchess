@@ -1,0 +1,10 @@
+.main-button.resign {
+  font-size: 0.7em;
+  background: linear-gradient(white 10%, #c4fcfc);
+}
+
+.main-button.confirm {
+  font-size: 0.7em;
+  background: linear-gradient(white 10%, #c4fcfc);
+  color: red;
+}

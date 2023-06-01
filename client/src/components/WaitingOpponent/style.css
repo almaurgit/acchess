@@ -1,0 +1,66 @@
+.waiting-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  padding: 3%;
+  font-weight: 300;
+  background: linear-gradient(#c4fcfc, white);
+  border: 3px solid rgba(166, 111, 68, 0.834);
+  border-radius: 27px;
+}
+
+.input-link {
+  background-color: lightgrey;
+  border: 1px solid black;
+  padding: 3px;
+  /* padding-right: 50px; */
+  border-radius: 3px;
+}
+
+.copy-field {
+  position: relative;
+}
+
+.copy-icon {
+  cursor: pointer;
+  color: var(--darkSquare);
+}
+
+.tooltip-copy {
+  font-size: 12px;
+  position: absolute;
+  right: 8px;
+  top: -30px;
+  transform: translateX(50%);
+  background-color: darkgrey;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.tooltip-copy::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate3D(-50%, 0, 0);
+  border-style: solid;
+  border-color: darkgrey transparent transparent transparent;
+  border-width: 3px 3px 0 3px;
+}
+
+hr {
+  width: 100%;
+  border-bottom: 0;
+}
+
+.other-infos {
+  display: flex;
+  flex-direction: row;
+  gap: 75px;
+  align-items: center;
+}

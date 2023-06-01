@@ -1,0 +1,22 @@
+.promotion {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  gap: 2px;
+  align-items: flex-start;
+  transform: translate3d(calc(-25% - 1px), -100%, 0);
+}
+
+.promotion-square {
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 2px rgba(166, 111, 68, 0.834);
+  /* border: 2px solid rgba(166, 111, 68, 0.834); */
+  width: calc(var(--squareWidth));
+  aspect-ratio: 1;
+  background-color: var(--lightSquare);
+}
+
+.promotion-square:hover {
+  cursor: pointer;
+  scale: 1.05;
+}

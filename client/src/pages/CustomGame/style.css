@@ -1,0 +1,148 @@
+.custom-page {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  /* flex-wrap: wrap;  */
+}
+
+.custom-board {
+  --boardWidth: 500px;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: space-between;
+  width: var(--boardWidth);
+}
+
+.piece-selection {
+  display: flex;
+  justify-content: space-between;
+  height: var(--pieceSize);
+  --width: 500px;
+  width: var(--width);
+}
+
+.piece {
+  width: var(--pieceSize);
+  position: absolute;
+  aspect-ratio: 1;
+}
+
+.piece.piece-selection-item:hover {
+  filter: drop-shadow(0 0 calc(var(--pieceSize) / 30) black);
+  cursor: pointer;
+}
+
+.custom-chessboard {
+  position: relative;
+  cursor: pointer;
+  width: var(--width);
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--dimension), 1fr);
+  grid-template-rows: repeat(var(--dimension), 1fr);
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
+  /* position: relative; */
+}
+
+.square.light {
+  background-color: var(--lightSquare);
+}
+
+.square.dark {
+  background-color: var(--darkSquare);
+}
+
+.grow-icon {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  transform: scale(1.5) translateX(-1px) rotate(135deg);
+  aspect-ratio: 1;
+}
+
+.info-custom-game {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  font-weight: 300;
+  padding: 3%;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--lightSquare);
+  background: linear-gradient(#c4fcfc, white);
+  border: 3px solid rgba(166, 111, 68, 0.834);
+  border-radius: 27px;
+  width: 206px;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
+}
+
+.board-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.main-button.board-button {
+  margin: 0;
+  font-weight: 300;
+  transform: scale(0.7);
+  box-shadow: 0 0 0 0;
+  filter: drop-shadow(0 0 1px black);
+}
+.main-button.board-button:hover {
+  opacity: 0.8;
+}
+
+.info-dimension {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 0.8em;
+}
+
+.color-to-move {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8em;
+}
+
+.current-piece-selected {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  font-size: 0.8em;
+}
+
+.selected-piece-container {
+  position: relative;
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 2px solid rgba(166, 111, 68, 0.834);
+}
+
+.main-button.disabled {
+  background: grey;
+  color: lightgrey;
+  font-size: 15px;
+  font-weight: 200;
+  box-shadow: 0 0 0 0;
+}
+.main-button.disabled:hover {
+  cursor: not-allowed;
+}

@@ -1,0 +1,26 @@
+.pgn {
+  border-radius: 5px;
+  margin: 15px;
+  padding: 5px;
+  background-color: beige;
+  color: rgb(56, 27, 27);
+  font-weight: 600;
+  font-size: 12.5px;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2);
+  overflow: auto;
+}
+
+.pgn .current {
+  font-weight: 800;
+}
+
+.pgn .move {
+  cursor: pointer;
+}
+
+@media screen and (min-width: 601px) {
+  .pgn {
+    height: calc(var(--widthChessboard) * 0.6);
+    max-width: 200px;
+  }
+}

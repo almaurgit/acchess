@@ -1,0 +1,40 @@
+.timerMobile {
+  margin-right: 5px;
+  display: flex;
+  justify-content: center;
+  transform: scale(var(--chessboardWidth));
+}
+
+.chessboard {
+  margin-left: 5px;
+  position: relative;
+}
+
+@media screen and (min-width: 601px) {
+  .game {
+    /* margin-left: 0; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    gap: 20px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.above-name {
+  font-weight: 300;
+  font-style: italic;
+  position: absolute;
+  right: 0;
+  top: -30px;
+}
+
+.below-name {
+  font-weight: 300;
+  font-style: italic;
+  position: absolute;
+  right: 0;
+  bottom: -30px;
+}

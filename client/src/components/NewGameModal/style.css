@@ -1,0 +1,103 @@
+.new-game-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  position: absolute;
+  font-weight: 300;
+  padding: 3%;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--lightSquare);
+  background: linear-gradient(#c4fcfc, white);
+  border: 3px solid rgba(166, 111, 68, 0.834);
+  border-radius: 27px;
+  min-width: 570px;
+}
+
+.color-selection-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.color-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 20px;
+}
+
+.name-color {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.color-icon {
+  color: rgb(74, 33, 33);
+}
+.color-icon:hover {
+  cursor: pointer;
+}
+.color-icon.selected {
+  transform: scale(1.7);
+  filter: drop-shadow(0 0 2px green);
+}
+
+.container-button {
+  display: flex;
+  justify-content: center;
+}
+
+.container-button {
+  margin-top: 30px;
+}
+
+.selection-options {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.blindfold-checkbox {
+  cursor: pointer;
+  width: 25px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 3px solid rgba(166, 111, 68, 1);
+  transform: translateY(-2px);
+}
+
+.blindfold-checkbox.selected {
+  background-color: var(--darkSquare);
+  box-shadow: inset 0 0 0 2px white;
+}
+
+.blindfold-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.selection-time-container {
+  margin-block: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+}
+
+.selection-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.separation-line {
+  border: 1px solid rgba(166, 111, 68, 1);
+}
+
+.time-title span {
+  margin-left: 10px;
+}

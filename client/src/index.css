@@ -1,0 +1,43 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+html {
+  font-family: 'Josefin Sans', 'Roboto', 'Source Sans Pro', sans-serif,
+    'Pinyon Script';
+  line-height: 1.6;
+  font-weight: 400;
+  font-size: 20px;
+  height: 100dvh;
+
+  /* color-scheme: light dark; */
+  /* color: rgba(255, 255, 255, 0.87); */
+  -webkit-text-size-adjust: 100%;
+  --lightSquare: #eac8af;
+  --darkSquare: #633d3d;
+  --widthChessboard: 500px;
+}
+
+/* #app {
+  max-width: 1280px;
+} */
+
+/* 
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} */

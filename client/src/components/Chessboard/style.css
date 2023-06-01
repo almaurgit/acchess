@@ -1,0 +1,77 @@
+.chessboard {
+  --dimensions: 8;
+  cursor: pointer;
+  width: var(--widthChessboard);
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--dimensions), 1fr);
+  grid-template-rows: repeat(var(--dimensions), 1fr);
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
+  position: relative;
+  /* grid-auto-rows: minmax(100px, auto); */
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0); */
+}
+
+.square {
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+}
+.square.light {
+  background-color: var(--lightSquare);
+}
+
+.square.dark {
+  background-color: var(--darkSquare);
+}
+
+.square.selected {
+  /* background-color: rgba(29, 191, 23, 0.488); */
+  box-shadow: inset 0px 0px 20px 2px rgba(0, 149, 255, 0.8);
+}
+
+.square.available {
+  /* background-color: rgba(23, 110, 191, 0); */
+  box-shadow: inset 0px 0px 50px 5px rgba(1, 73, 106, 0.563);
+}
+.square.available:hover,
+.square.available.hover {
+  box-shadow: inset 0px 0px 50px 5px rgb(0, 47, 69);
+}
+
+.square.available.capture {
+  box-shadow: inset 0px 0px 50px 5px rgba(253, 0, 0, 0.488);
+}
+.square.available.capture:hover,
+.square.available.capture.hover {
+  box-shadow: inset 0px 0px 50px 5px rgb(253, 0, 0);
+}
+
+.square.lastmove {
+  box-shadow: inset 0px 0px 20px 2px rgba(0, 255, 229, 0.8);
+}
+
+.square.incheck {
+  box-shadow: inset 0px 0px 20px 2px rgba(255, 140, 0, 0.8);
+}
+
+.grow-icon {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  transform: scale(1.5) translateX(-1px) rotate(135deg);
+  aspect-ratio: 1;
+}
+
+.grow-icon:hover {
+  cursor: nwse-resize;
+}
+
+.piece {
+  position: absolute;
+  width: var(--pieceSize);
+  aspect-ratio: 1;
+}
