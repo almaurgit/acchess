@@ -9,7 +9,7 @@ Ce site a été réalisé en Node.js côté serveur, avec le framework Express.j
 Site optimisé pour une interface de bureau.
 
 
-![Partie en cours](https://ibb.co/GRpnWXX)
+![Partie en cours](/client/src/assets/chessgame.jpg)
 Partie en cours
 
 ![Page de customisation d'une partie](https://ibb.co/Vm5TY3q)
