@@ -12,5 +12,5 @@ Site optimisé pour une interface de bureau.
 ![Partie en cours](/client/src/assets/chessgame.jpg)
 Partie en cours
 
-![Page de customisation d'une partie](https://ibb.co/Vm5TY3q)
+![Page de customisation d'une partie](/client/src/assets/customgame.jpg)
 Page permettant de créer un échiquier personnalisé
